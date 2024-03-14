@@ -60,6 +60,19 @@ final class DefaultChatController: ChatController {
             }
         })
     }
+  
+    func loadNextMessages(completion: @escaping ([Section]) -> Void) {
+        dataProvider.loadNextMessages(completion: { messages in
+            self.appendConvertingToMessages(messages)
+            self.markAllMessagesAsReceived {
+                self.markAllMessagesAsRead {
+                    self.propagateLatestMessages { sections in
+                        completion(sections)
+                    }
+                }
+            }
+        })
+    }
 
     func sendMessage(_ data: Message.Data, completion: @escaping ([Section]) -> Void) {
         messages.append(RawMessage(id: UUID(), date: Date(), data: convert(data), userId: userId))

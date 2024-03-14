@@ -28,6 +28,8 @@ protocol RandomDataProvider {
 
     func loadPreviousMessages(completion: @escaping ([RawMessage]) -> Void)
 
+    func loadNextMessages(completion: @escaping ([RawMessage]) -> Void)
+
     func stop()
 }
 
@@ -39,6 +41,8 @@ final class DefaultRandomDataProvider: RandomDataProvider {
     private var typingTimer: Timer?
 
     private var startingTimestamp = Date().timeIntervalSince1970
+  
+    private var endingTimestamp = Date().timeIntervalSince1970
 
     private var typingState: TypingState = .idle
 
@@ -99,7 +103,7 @@ final class DefaultRandomDataProvider: RandomDataProvider {
             guard let self else {
                 return
             }
-            let messages = createBunchOfMessages(number: 50)
+            let messages = createBunchOfPreviousMessages(number: 50)
             if messages.count > 10 {
                 lastReceivedUUID = messages[messages.count - 10].id
             }
@@ -117,7 +121,20 @@ final class DefaultRandomDataProvider: RandomDataProvider {
             guard let self else {
                 return
             }
-            let messages = createBunchOfMessages(number: 50)
+            let messages = createBunchOfPreviousMessages(number: 50)
+
+            DispatchQueue.main.async {
+                completion(messages)
+            }
+        }
+    }
+  
+    func loadNextMessages(completion: @escaping ([RawMessage]) -> Void) {
+        dispatchQueue.async { [weak self] in
+            guard let self else {
+                return
+            }
+            let messages = createBunchOfNextMessages(number: 50)
 
             DispatchQueue.main.async {
                 completion(messages)
@@ -199,9 +216,17 @@ final class DefaultRandomDataProvider: RandomDataProvider {
         }
     }
 
-    private func createBunchOfMessages(number: Int = 50) -> [RawMessage] {
+    private func createBunchOfPreviousMessages(number: Int = 50) -> [RawMessage] {
         let messages = (0..<number).map { _ -> RawMessage in
             startingTimestamp -= TimeInterval(Int.random(in: 100...1000))
+            return self.createRandomMessage(date: Date(timeIntervalSince1970: startingTimestamp))
+        }
+        return messages
+    }
+  
+    private func createBunchOfNextMessages(number: Int = 50) -> [RawMessage] {
+        let messages = (0..<number).map { _ -> RawMessage in
+            endingTimestamp += TimeInterval(Int.random(in: 100...1000))
             return self.createRandomMessage(date: Date(timeIntervalSince1970: startingTimestamp))
         }
         return messages

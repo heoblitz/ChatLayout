@@ -45,6 +45,7 @@ final class ChatViewController: UIViewController {
     private enum ControllerActions {
         case loadingInitialMessages
         case loadingPreviousMessages
+        case loadingNextMessages
         case updatingCollection
     }
 
@@ -293,6 +294,7 @@ extension ChatViewController: UIScrollViewDelegate {
         }
         guard !currentControllerActions.options.contains(.loadingInitialMessages),
               !currentControllerActions.options.contains(.loadingPreviousMessages),
+              !currentControllerActions.options.contains(.loadingNextMessages),
               !currentInterfaceActions.options.contains(.scrollingToTop),
               !currentInterfaceActions.options.contains(.scrollingToBottom) else {
             return
@@ -315,6 +317,22 @@ extension ChatViewController: UIScrollViewDelegate {
             let animated = !isUserInitiatedScrolling
             processUpdates(with: sections, animated: animated, requiresIsolatedProcess: false) {
                 self.currentControllerActions.options.remove(.loadingPreviousMessages)
+            }
+        }
+    }
+    
+    private func loadNextMessages() {
+        // Blocking the potential multiple call of that function as during the content invalidation the contentOffset of the UICollectionView can change
+        // in any way so it may trigger another call of that function and lead to unexpected behaviour/animation
+        currentControllerActions.options.insert(.loadingNextMessages)
+        chatController.loadNextMessages { [weak self] sections in
+            guard let self else {
+                return
+            }
+            // Reloading the content without animation just because it looks better is the scrolling is in process.
+            let animated = !isUserInitiatedScrolling
+            processUpdates(with: sections, animated: animated, requiresIsolatedProcess: false) {
+                self.currentControllerActions.options.remove(.loadingNextMessages)
             }
         }
     }
