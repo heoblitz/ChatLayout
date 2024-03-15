@@ -281,6 +281,22 @@ extension ChatViewController: UIScrollViewDelegate {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        enum ScrollDirection {
+            case up
+            case down
+            case none
+            
+            init(velocity: CGFloat) {
+                if velocity > 0 {
+                    self = .up
+                } else if velocity < 0 {
+                    self = .down
+                } else {
+                    self = .none
+                }
+            }
+        }
+        
         if currentControllerActions.options.contains(.updatingCollection), collectionView.isDragging {
             // Interrupting current update animation if user starts to scroll while batchUpdate is performed. It helps to
             // avoid presenting blank area if user scrolls out of the animation rendering area.
@@ -292,6 +308,7 @@ extension ChatViewController: UIScrollViewDelegate {
                 })
             }
         }
+        
         guard !currentControllerActions.options.contains(.loadingInitialMessages),
               !currentControllerActions.options.contains(.loadingPreviousMessages),
               !currentControllerActions.options.contains(.loadingNextMessages),
@@ -299,9 +316,19 @@ extension ChatViewController: UIScrollViewDelegate {
               !currentInterfaceActions.options.contains(.scrollingToBottom) else {
             return
         }
-
-        if scrollView.contentOffset.y <= -scrollView.adjustedContentInset.top + scrollView.bounds.height {
+        
+        let scrollDirection = ScrollDirection(velocity: scrollView.panGestureRecognizer.velocity(in: self.view).y)
+        
+        if
+            scrollDirection == .up,
+            scrollView.contentOffset.y <= -scrollView.adjustedContentInset.top + scrollView.bounds.height
+        {
             loadPreviousMessages()
+        } else if
+            scrollDirection == .down,
+            scrollView.contentOffset.y >= scrollView.contentSize.height - scrollView.adjustedContentInset.top - scrollView.bounds.height * 2
+        {
+            loadNextMessages()
         }
     }
 

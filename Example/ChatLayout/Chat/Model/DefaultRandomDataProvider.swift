@@ -227,7 +227,7 @@ final class DefaultRandomDataProvider: RandomDataProvider {
     private func createBunchOfNextMessages(number: Int = 50) -> [RawMessage] {
         let messages = (0..<number).map { _ -> RawMessage in
             endingTimestamp += TimeInterval(Int.random(in: 100...1000))
-            return self.createRandomMessage(date: Date(timeIntervalSince1970: startingTimestamp))
+            return self.createRandomMessage(date: Date(timeIntervalSince1970: endingTimestamp))
         }
         return messages
     }
