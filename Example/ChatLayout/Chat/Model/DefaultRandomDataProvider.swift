@@ -97,8 +97,9 @@ final class DefaultRandomDataProvider: RandomDataProvider {
     }
 
     func loadInitialMessages(completion: @escaping ([RawMessage]) -> Void) {
-        restartMessageTimer()
-        restartTypingTimer()
+        // comment for test
+//        restartMessageTimer()
+//        restartTypingTimer()
         dispatchQueue.async { [weak self] in
             guard let self else {
                 return

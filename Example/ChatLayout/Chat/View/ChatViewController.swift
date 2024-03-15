@@ -126,7 +126,11 @@ final class ChatViewController: UIViewController {
         }
         inputBarView.topStackView.addArrangedSubview(fpsView)
         inputBarView.shouldAnimateTextDidChangeLayout = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Show Keyboard", style: .plain, target: self, action: #selector(ChatViewController.showHideKeyboard))
+        navigationItem.leftBarButtonItems = [
+            UIBarButtonItem(title: "Show Keyboard", style: .plain, target: self, action: #selector(ChatViewController.showHideKeyboard)),
+            UIBarButtonItem(title: "Previous", style: .plain, target: self, action: #selector(ChatViewController.loadPreviousMessages)),
+            UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(ChatViewController.loadNextMessages))
+        ]
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(ChatViewController.setEditNotEdit))
 
         chatLayout.settings.interItemSpacing = 8
@@ -257,81 +261,85 @@ final class ChatViewController: UIViewController {
 
 extension ChatViewController: UIScrollViewDelegate {
     public func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
-        guard scrollView.contentSize.height > 0,
-              !currentInterfaceActions.options.contains(.showingAccessory),
-              !currentInterfaceActions.options.contains(.showingPreview),
-              !currentInterfaceActions.options.contains(.scrollingToTop),
-              !currentInterfaceActions.options.contains(.scrollingToBottom) else {
-            return false
-        }
+        // comment for test
+//        guard scrollView.contentSize.height > 0,
+//              !currentInterfaceActions.options.contains(.showingAccessory),
+//              !currentInterfaceActions.options.contains(.showingPreview),
+//              !currentInterfaceActions.options.contains(.scrollingToTop),
+//              !currentInterfaceActions.options.contains(.scrollingToBottom) else {
+//            return false
+//        }
         // Blocking the call of loadPreviousMessages() as UIScrollView behaves the way that it will scroll to the top even if we keep adding
         // content there and keep changing the content offset until it actually reaches the top. So instead we wait until it reaches the top and initiate
         // the loading after.
-        currentInterfaceActions.options.insert(.scrollingToTop)
+//        currentInterfaceActions.options.insert(.scrollingToTop)
         return true
     }
 
     public func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
-        guard !currentControllerActions.options.contains(.loadingInitialMessages),
-              !currentControllerActions.options.contains(.loadingPreviousMessages) else {
-            return
-        }
-        currentInterfaceActions.options.remove(.scrollingToTop)
-        loadPreviousMessages()
+        // comment for test
+//        guard !currentControllerActions.options.contains(.loadingInitialMessages),
+//              !currentControllerActions.options.contains(.loadingPreviousMessages) else {
+//            return
+//        }
+//        currentInterfaceActions.options.remove(.scrollingToTop)
+//        loadPreviousMessages()
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        enum ScrollDirection {
-            case up
-            case down
-            case none
-            
-            init(velocity: CGFloat) {
-                if velocity > 0 {
-                    self = .up
-                } else if velocity < 0 {
-                    self = .down
-                } else {
-                    self = .none
-                }
-            }
-        }
-        
-        if currentControllerActions.options.contains(.updatingCollection), collectionView.isDragging {
-            // Interrupting current update animation if user starts to scroll while batchUpdate is performed. It helps to
-            // avoid presenting blank area if user scrolls out of the animation rendering area.
-            UIView.performWithoutAnimation {
-                self.collectionView.performBatchUpdates({}, completion: { _ in
-                    let context = ChatLayoutInvalidationContext()
-                    context.invalidateLayoutMetrics = false
-                    self.collectionView.collectionViewLayout.invalidateLayout(with: context)
-                })
-            }
-        }
-        
-        guard !currentControllerActions.options.contains(.loadingInitialMessages),
-              !currentControllerActions.options.contains(.loadingPreviousMessages),
-              !currentControllerActions.options.contains(.loadingNextMessages),
-              !currentInterfaceActions.options.contains(.scrollingToTop),
-              !currentInterfaceActions.options.contains(.scrollingToBottom) else {
-            return
-        }
-        
-        let scrollDirection = ScrollDirection(velocity: scrollView.panGestureRecognizer.velocity(in: self.view).y)
-        
-        if
-            scrollDirection == .up,
-            scrollView.contentOffset.y <= -scrollView.adjustedContentInset.top + scrollView.bounds.height
-        {
-            loadPreviousMessages()
-        } else if
-            scrollDirection == .down,
-            scrollView.contentOffset.y >= scrollView.contentSize.height - scrollView.adjustedContentInset.top - scrollView.bounds.height * 2
-        {
-            loadNextMessages()
-        }
+        // comment for test
+//        enum ScrollDirection {
+//            case up
+//            case down
+//            case none
+//            
+//            init(velocity: CGFloat) {
+//                if velocity > 0 {
+//                    self = .up
+//                } else if velocity < 0 {
+//                    self = .down
+//                } else {
+//                    self = .none
+//                }
+//            }
+//        }
+//        
+//        if currentControllerActions.options.contains(.updatingCollection), collectionView.isDragging {
+//            // Interrupting current update animation if user starts to scroll while batchUpdate is performed. It helps to
+//            // avoid presenting blank area if user scrolls out of the animation rendering area.
+//            UIView.performWithoutAnimation {
+//                self.collectionView.performBatchUpdates({}, completion: { _ in
+//                    let context = ChatLayoutInvalidationContext()
+//                    context.invalidateLayoutMetrics = false
+//                    self.collectionView.collectionViewLayout.invalidateLayout(with: context)
+//                })
+//            }
+//        }
+//        
+//        guard !currentControllerActions.options.contains(.loadingInitialMessages),
+//              !currentControllerActions.options.contains(.loadingPreviousMessages),
+//              !currentControllerActions.options.contains(.loadingNextMessages),
+//              !currentInterfaceActions.options.contains(.scrollingToTop),
+//              !currentInterfaceActions.options.contains(.scrollingToBottom) else {
+//            return
+//        }
+//        
+//        let scrollDirection = ScrollDirection(velocity: scrollView.panGestureRecognizer.velocity(in: self.view).y)
+//        
+//        if
+//            scrollDirection == .up,
+//            scrollView.contentOffset.y <= -scrollView.adjustedContentInset.top + scrollView.bounds.height
+//        {
+//            loadPreviousMessages()
+//        } else if
+//            scrollDirection == .down,
+//            scrollView.contentOffset.y >= scrollView.contentSize.height - scrollView.adjustedContentInset.top - scrollView.bounds.height * 2
+//        {
+//            loadNextMessages()
+//        }
     }
 
+    @objc
     private func loadPreviousMessages() {
         // Blocking the potential multiple call of that function as during the content invalidation the contentOffset of the UICollectionView can change
         // in any way so it may trigger another call of that function and lead to unexpected behaviour/animation
@@ -348,6 +356,7 @@ extension ChatViewController: UIScrollViewDelegate {
         }
     }
     
+    @objc
     private func loadNextMessages() {
         // Blocking the potential multiple call of that function as during the content invalidation the contentOffset of the UICollectionView can change
         // in any way so it may trigger another call of that function and lead to unexpected behaviour/animation
