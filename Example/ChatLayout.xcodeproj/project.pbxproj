@@ -600,13 +600,13 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = PG4V34R8QT;
+						DevelopmentTeam = HK54HM2TC6;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = PG4V34R8QT;
+						DevelopmentTeam = HK54HM2TC6;
 						LastSwiftMigration = 0900;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -945,7 +945,7 @@
 				CODE_SIGN_ENTITLEMENTS = ChatLayout_Example.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PG4V34R8QT;
+				DEVELOPMENT_TEAM = HK54HM2TC6;
 				INFOPLIST_FILE = ChatLayout/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -968,7 +968,7 @@
 				CODE_SIGN_ENTITLEMENTS = ChatLayout_Example.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PG4V34R8QT;
+				DEVELOPMENT_TEAM = HK54HM2TC6;
 				INFOPLIST_FILE = ChatLayout/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -987,7 +987,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1E094931D1426F33B8D1D082 /* Pods-ChatLayout_Tests.debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PG4V34R8QT;
+				DEVELOPMENT_TEAM = HK54HM2TC6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1010,7 +1010,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7878AA33F3C696DE4A57C8C1 /* Pods-ChatLayout_Tests.release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PG4V34R8QT;
+				DEVELOPMENT_TEAM = HK54HM2TC6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",

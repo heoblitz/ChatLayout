@@ -144,7 +144,7 @@ final class ChatViewController: UIViewController {
         collectionView.keyboardDismissMode = .interactive
 
         /// https://openradar.appspot.com/40926834
-        collectionView.isPrefetchingEnabled = false
+//        collectionView.isPrefetchingEnabled = false
 
         collectionView.contentInsetAdjustmentBehavior = .always
         if #available(iOS 13.0, *) {
@@ -272,36 +272,36 @@ extension ChatViewController: UIScrollViewDelegate {
     }
 
     public func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
-        guard !currentControllerActions.options.contains(.loadingInitialMessages),
-              !currentControllerActions.options.contains(.loadingPreviousMessages) else {
-            return
-        }
-        currentInterfaceActions.options.remove(.scrollingToTop)
-        loadPreviousMessages()
+//        guard !currentControllerActions.options.contains(.loadingInitialMessages),
+//              !currentControllerActions.options.contains(.loadingPreviousMessages) else {
+//            return
+//        }
+//        currentInterfaceActions.options.remove(.scrollingToTop)
+//        loadPreviousMessages()
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if currentControllerActions.options.contains(.updatingCollection), collectionView.isDragging {
-            // Interrupting current update animation if user starts to scroll while batchUpdate is performed. It helps to
-            // avoid presenting blank area if user scrolls out of the animation rendering area.
-            UIView.performWithoutAnimation {
-                self.collectionView.performBatchUpdates({}, completion: { _ in
-                    let context = ChatLayoutInvalidationContext()
-                    context.invalidateLayoutMetrics = false
-                    self.collectionView.collectionViewLayout.invalidateLayout(with: context)
-                })
-            }
-        }
-        guard !currentControllerActions.options.contains(.loadingInitialMessages),
-              !currentControllerActions.options.contains(.loadingPreviousMessages),
-              !currentInterfaceActions.options.contains(.scrollingToTop),
-              !currentInterfaceActions.options.contains(.scrollingToBottom) else {
-            return
-        }
-
-        if scrollView.contentOffset.y <= -scrollView.adjustedContentInset.top + scrollView.bounds.height {
-            loadPreviousMessages()
-        }
+//        if currentControllerActions.options.contains(.updatingCollection), collectionView.isDragging {
+//            // Interrupting current update animation if user starts to scroll while batchUpdate is performed. It helps to
+//            // avoid presenting blank area if user scrolls out of the animation rendering area.
+//            UIView.performWithoutAnimation {
+//                self.collectionView.performBatchUpdates({}, completion: { _ in
+//                    let context = ChatLayoutInvalidationContext()
+//                    context.invalidateLayoutMetrics = false
+//                    self.collectionView.collectionViewLayout.invalidateLayout(with: context)
+//                })
+//            }
+//        }
+//        guard !currentControllerActions.options.contains(.loadingInitialMessages),
+//              !currentControllerActions.options.contains(.loadingPreviousMessages),
+//              !currentInterfaceActions.options.contains(.scrollingToTop),
+//              !currentInterfaceActions.options.contains(.scrollingToBottom) else {
+//            return
+//        }
+//
+//        if scrollView.contentOffset.y <= -scrollView.adjustedContentInset.top + scrollView.bounds.height {
+//            loadPreviousMessages()
+//        }
     }
 
     private func loadPreviousMessages() {
@@ -504,7 +504,7 @@ extension ChatViewController: ChatControllerDelegate {
                                       return false
                                   },
                                   onInterruptedReload: {
-                                      let positionSnapshot = ChatLayoutPositionSnapshot(indexPath: IndexPath(item: 0, section: sections.count - 1), kind: .footer, edge: .bottom)
+                                      let positionSnapshot = ChatLayoutPositionSnapshot(indexPath: IndexPath(item: 0, section: sections.count - 1), kind: .header, edge: .top)
                                       self.collectionView.reloadData()
                                       // We want so that user on reload appeared at the very bottom of the layout
                                       self.chatLayout.restoreContentOffset(with: positionSnapshot)

@@ -340,7 +340,7 @@ open class CollectionViewChatLayout: UICollectionViewLayout {
 
         #if DEBUG
         if collectionView.isPrefetchingEnabled {
-            preconditionFailure("UICollectionView with prefetching enabled is not supported due to https://openradar.appspot.com/40926834 bug.")
+//             preconditionFailure("UICollectionView with prefetching enabled is not supported due to https://openradar.appspot.com/40926834 bug.")
         }
         #endif
 
